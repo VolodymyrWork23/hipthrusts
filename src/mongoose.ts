@@ -178,6 +178,12 @@ export function htMongooseFactory(mongoose: any) {
     WithResponseSanitized(DocFactory)(Super);
   }
 
+  async function updateEntityTop(objectToUpdate: any, dataToUpdate: any) {
+    objectToUpdate.set(dataToUpdate);
+    await objectToUpdate.save();
+    return objectToUpdate;
+  }
+
   return {
     WithBodySanitized,
     WithBodySanitizedTo,
@@ -189,5 +195,6 @@ export function htMongooseFactory(mongoose: any) {
     dtoSchemaObj,
     findByIdRequired,
     stripIdTransform,
+    updateEntityTop,
   };
 }

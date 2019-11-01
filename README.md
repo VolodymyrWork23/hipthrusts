@@ -42,7 +42,7 @@ import {
   // chains several HT mixins
   HTPipe,
   // CRUD "update" mixin
-  SaveFromBody
+  UpdateFromBody
 } from 'hipthrusts';
 import {
   // implements sanitizeParams, sanitizeBody, and
@@ -61,7 +61,7 @@ thingRouter.put('/:id', hipExpressHandlerFactory(
     UpdateSanitizers,
     UpdatePreAuth,
     AuthorizeThingOwner,
-    SaveFromBody('thing'),
+    UpdateFromBody('thing'),
   )(HTBase)
 );
 ```
