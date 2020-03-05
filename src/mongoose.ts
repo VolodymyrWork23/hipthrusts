@@ -155,20 +155,6 @@ export function htMongooseFactory(mongoose: any) {
     };
   }
 
-  function WithNoopWork() {
-    // tslint:disable-next-line:only-arrow-functions
-    return function<TSuper extends Constructor>(Super: TSuper) {
-      return class NoopWork extends Super {
-        constructor(...args: any[]) {
-          super(...args);
-        }
-        public async doWork() {
-          return null;
-        }
-      };
-    };
-  }
-
   // @note: sanitize body validates modified only!  This is cause you usually will only send fields to update.
   function WithBodySanitized<
     TSafeBody extends ReturnType<TInstance['toObject']>,
@@ -191,20 +177,6 @@ export function htMongooseFactory(mongoose: any) {
           }
           // @tswtf: why do I need to force this?!
           return doc.toObject({ transform: stripIdTransform }) as TSafeBody;
-        }
-      };
-    };
-  }
-
-  function WithGetRequestBodyIgnored() {
-    // tslint:disable-next-line:only-arrow-functions
-    return function<TSuper extends Constructor>(Super: TSuper) {
-      return class GetRequestBodyIgnore extends Super {
-        constructor(...args: any[]) {
-          super(...args);
-        }
-        public sanitizeBody() {
-          return {};
         }
       };
     };
@@ -272,8 +244,6 @@ export function htMongooseFactory(mongoose: any) {
   return {
     WithBodySanitized,
     WithBodySanitizedTo,
-    WithGetRequestBodyIgnored,
-    WithNoopWork,
     WithParamsSanitized,
     WithParamsSanitizedTo,
     WithPojoToDocument,

@@ -19,8 +19,8 @@ function toExpressHandlerClass<
   TResBodyUnsafeInput,
   TStrategy extends Constructor<
     HipThrustable<
-      TParamsSafe,
-      TBodySafe,
+      TParamsSafe | null,
+      TBodySafe | null,
       TResBodyUnsafeReturn,
       TResBodyUnsafeInput
     >
@@ -35,8 +35,10 @@ function toExpressHandlerClass<
       const res = args[1];
       this.unsafeReq = req;
       this.unsafeRes = res;
-      this.params = this.sanitizeParams(req.params);
-      this.body = this.sanitizeBody(req.body);
+      this.params = this.sanitizeParams
+        ? this.sanitizeParams(req.params)
+        : null;
+      this.body = this.sanitizeBody ? this.sanitizeBody(req.body) : null;
     }
   };
 }

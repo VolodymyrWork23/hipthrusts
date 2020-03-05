@@ -10,13 +10,13 @@ export interface HipThrustable<
   params: TParamsSafe;
   body: TBodySafe;
   // doesn't need composition
-  sanitizeParams(unsafeParams: any): TParamsSafe;
+  sanitizeParams?(unsafeParams: any): TParamsSafe;
   // doesn't need composition
-  sanitizeBody(unsafeBody: any): TBodySafe;
+  sanitizeBody?(unsafeBody: any): TBodySafe;
   preAuthorize(): boolean;
   attachData?(): Promise<void>;
   finalAuthorize(): Promise<boolean>;
-  doWork(): Promise<void>;
+  doWork?(): Promise<void>;
   response(): HipWorkResponse<TResBodyUnsafeReturn>;
   sanitizeResponse(unsafeResponse: TResBodyUnsafeInput): any;
 }
@@ -80,7 +80,9 @@ export async function executeHipthrustable(requestHandler: AnyHipThrustable) {
     }
   }
   try {
-    await requestHandler.doWork();
+    if (requestHandler.doWork) {
+      await requestHandler.doWork();
+    }
     const { unsafeResponse, status } = requestHandler.response();
     const safeResponse = requestHandler.sanitizeResponse(unsafeResponse);
     const responseAndStatus = { response: safeResponse, status: status || 200 };
@@ -100,11 +102,8 @@ export async function assertHipthrustable(
   RequestHandler: Constructor<AnyHipThrustable>
 ) {
   const requiredMethods = [
-    'sanitizeParams',
-    'sanitizeBody',
     'preAuthorize',
     'finalAuthorize',
-    'doWork',
     'response',
     'sanitizeResponse',
   ];
