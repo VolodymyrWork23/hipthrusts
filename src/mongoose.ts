@@ -208,9 +208,16 @@ export function htMongooseFactory(mongoose: any) {
           super(...args);
         }
         public sanitizeResponse(unsafeResponse: any) {
-          const doc = DocFactory(unsafeResponse.toObject());
-          // @tswtf: why do I need to force this?!
-          return doc.toObject() as TSafeResponse;
+          if (Array.isArray(unsafeResponse)) {
+            unsafeResponse.forEach(element => {
+              element = DocFactory(element.toObject());
+            });
+            return unsafeResponse as TSafeResponse;
+          } else {
+            const doc = DocFactory(unsafeResponse.toObject());
+            // @tswtf: why do I need to force this?!
+            return doc.toObject() as TSafeResponse;
+          }
         }
       };
     };
